@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        font-family:'Courier New', Courier, monospace;
+        font-weight: bold;
+        box-sizing: border-box;
+    }
+    .container{
+        width:100%;
+        height: 100vh;
+        background: #0b0423;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+    }
+    #esquerdo, #direito{
+        width: 300px;
+        min-height: 400px;
+        margin:20px;
+        border: 2px dashed #fff;
+
+    }
+    .caixa{
+        background: #e91e63;
+        height: 40px;
+        margin: 30px;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        cursor:grab;
+        border-radius: 20px;
+    }
+    .caixa img{
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        object-fit: cover;
+        align-items: center;
+        justify-content: center;
+        margin-right: 10px;
+        margin-left: 20px;
+        border: 2px solid #a78c95;
+        
+    }
+
+ 
+</style>
+<body>
+    
+    <div class="container">
+       <div class="caixa-esquerda" id="esquerdo">
+        
+            <div draggable="true" class="caixa"> <img src="logotipos/html5-logo.png" alt="html"> HTML</div>
+            <div draggable="true" class="caixa"> <img src="logotipos/css-logo.png" alt="css"> CSS</div>
+            <div draggable="true" class="caixa"> <img src="logotipos/logo_js.jpg" alt="javascript"> JavaScript</div>
+            <div draggable="true" class="caixa"> <img src="logotipos/node-js-logo-png_seeklogo-273750.png" alt=""> Node.js</div>
+            <div draggable="true" class="caixa"> <img src="logotipos/mongodb.png" alt=""> MongoDB</div>
+       </div>
+       <div class="caixa-direta" id="direito"></div>
+    </div>
+
+    <script>
+        let  elementos = document.getElementsByClassName('caixa')
+        let  caixaDireito = document.getElementById('direito')
+        let  caixaEsquerda = document.getElementById('esquerdo')
+
+        for(elemento of elementos){
+            elemento.addEventListener('dragstart', function(e){
+                let selecioando = e.target;
+                
+                // Configura caixa direita
+                caixaDireito.addEventListener('dragover', function(e){
+                    e.preventDefault();
+                });
+                caixaDireito.addEventListener('drop', function(e){
+                    caixaDireito.appendChild(selecioando)
+                    selecioando = null
+                });
+                
+            
+                // Configura caixa esquerda
+                caixaEsquerda.addEventListener('dragover', function(e){
+                    e.preventDefault();
+                });
+                caixaEsquerda.addEventListener('drop', function(e){
+                    caixaEsquerda.appendChild(selecioando)
+                    selecioando = null
+                });
+            });
+            elemento.addEventListener('dragend', ()=>{
+                console.log("Itens selecionados com sucesso....")
+            })
+        }
+          
+    </script>
+</body>
+</html>
