@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Drag & Drop – Duas caixas</title>
+  <style>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Courier New', Courier, monospace;
+        font-weight: bold;
+    }
+    body {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+    }
+    .container{
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background:#0b0423;
+    }
+
+    .box {
+      width: 220px;
+      min-height: 260px;
+      border: 2px dashed #777;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+      background: #f9f9f9;
+    }
+
+    .box h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+    }
+
+    .img-item {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 1px solid #ccc;
+      cursor: grab;
+      /* background: #1b1a1a; */
+    }
+
+    .img-item.dragging {
+      opacity: 0.5;
+      border-color: #021321;
+    }
+
+    .box.drag-over {
+      /* border-color: #10ae16; */
+      background: #0e3311;
+    }
+  </style>
+</head>
+<body>
+    <div class="container">
+        <div class="box" id="left">
+            <h3>Esquerda</h3>
+            <img class="img-item" src="logotipos/IMABQ3nCbU9hc-circle.png" draggable="true" alt="Imagem 1">
+            <img class="img-item" src="logotipos/IMIfwCItVhEa8-circle.png" draggable="true" alt="Imagem 2">
+            <img class="img-item" src="logotipos/minha_foto.png" draggable="true" alt="Imagem 3">
+        </div>
+
+        <div class="box" id="right">
+            <h3>Direita</h3>
+            <img class="img-item" src="logotipos/OIP-circle.png" draggable="true" alt="Imagem 4">
+            <img class="img-item" src="logotipos/logo_js-circle.png" draggable="true" alt="Imagem 5">
+        </div>
+    </div>
+
+  <script>
+    const draggables = document.querySelectorAll('.img-item');
+    const boxes = document.querySelectorAll('.box');
+    let draggedElement = null;
+
+    // Configurar elementos arrastáveis
+    draggables.forEach(img => {
+      img.addEventListener('dragstart', e => {
+        draggedElement = e.target;
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', 'image');
+        // Marca visualmente
+        img.classList.add('dragging');
+      });
+
+      img.addEventListener('dragend', () => {
+        img.classList.remove('dragging');
+        draggedElement = null;
+      });
+    });
+
+    // Função para calcular a posição onde soltar (ordenar entre as imagens)
+    function getDragAfterElement(container, y) {
+      const draggableElements = [
+        ...container.querySelectorAll('.img-item:not(.dragging)')
+      ];
+
+      return draggableElements.reduce(
+        (closest, child) => {
+          const box = child.getBoundingClientRect();
+          const offset = y - box.top - box.height / 2;
+
+          if (offset < 0 && offset > closest.offset) {
+            return { offset, element: child };
+          }
+          return closest;
+        },
+        { offset: Number.NEGATIVE_INFINITY }
+      ).element;
+    }
+
+    // Configurar as caixas como áreas de drop
+    boxes.forEach(box => {
+      box.addEventListener('dragover', e => {
+        e.preventDefault(); // obrigatório para permitir drop
+        const afterElement = getDragAfterElement(box, e.clientY);
+        const draggingEl = document.querySelector('.img-item.dragging');
+
+        if (!draggingEl) return;
+
+        if (afterElement == null) {
+          // Adiciona no final
+          box.appendChild(draggingEl);
+        } else {
+          // Insere antes do elemento mais próximo
+          box.insertBefore(draggingEl, afterElement);
+        }
+
+        box.classList.add('drag-over');
+      });
+
+      box.addEventListener('dragleave', () => {
+        box.classList.remove('drag-over');
+      });
+
+      box.addEventListener('drop', () => {
+        box.classList.remove('drag-over');
+      });
+    });
+  </script>
+</body>
+</html>
