@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste basico de drag and drop</title>
+</head>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+    }
+    .container-principal{
+        background:red;
+        width: 100%;
+        height: 100vh;
+        display: grid;
+        align-items: center;
+        justify-content: center;
+
+    }
+    #html{
+        background:green;
+        width: 100%;
+        height: 20px;
+        padding: 10px;
+        cursor: grab;
+        text-align: center;
+    }
+    #caixa-grande{
+        background:#605c5c;
+        width: 500px;
+        height: 250px;
+        padding: 30px;
+        border: 2px dashed white;
+
+        display: grid;
+        place-items: center;
+    }
+
+</style>
+<body>
+    <div class="container-principal">
+        <div draggable="true" id="html">HTML</div>
+        <div draggable="true" id="caixa-grande"></div>
+    </div>
+
+    <script>
+        const html = document.getElementById('html')
+        const caixaGrande = document.getElementById('caixa-grande')
+    
+        
+        html.addEventListener('dragstart', event=>{
+            event.dataTransfer.setData('text/plain', event.target.id)
+            event.dataTransfer.effectAllowed = 'copyMove'
+        })
+
+        caixaGrande.addEventListener('dragover', event=>{
+            event.preventDefault()
+            event.dataTransfer.dropEffect ='copy'
+        })
+
+       caixaGrande.addEventListener('drop', event=>{
+            event.preventDefault()
+            caixaGrande.classList.remove('destaque')
+            const id = event.dataTransfer.getData('text/plain')
+            const selecionar = document.getElementById(id)
+            caixaGrande.appendChild(selecionar)
+        })
+        caixaGrande.addEventListener('dragend', ()=>{
+            alert('Elemnto inserido!')
+        })
+    </script>
+</body>
+</html>
