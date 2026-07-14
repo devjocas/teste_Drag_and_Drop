@@ -48,25 +48,24 @@
     <script>
         const html = document.getElementById('html')
         const caixaGrande = document.getElementById('caixa-grande')
-    
-        
+        //Inicializar o arrastamento (dragstart)
         html.addEventListener('dragstart', event=>{
             event.dataTransfer.setData('text/plain', event.target.id)
             event.dataTransfer.effectAllowed = 'copyMove'
         })
-
+        //Inicializar o drop apartir do dragover
         caixaGrande.addEventListener('dragover', event=>{
             event.preventDefault()
             event.dataTransfer.dropEffect ='copy'
         })
-
+        //Realizar a soltura 
        caixaGrande.addEventListener('drop', event=>{
             event.preventDefault()
-            caixaGrande.classList.remove('destaque')
             const id = event.dataTransfer.getData('text/plain')
             const selecionar = document.getElementById(id)
             caixaGrande.appendChild(selecionar)
         })
+        //Finalizar a manipulação da API drag and drop
         caixaGrande.addEventListener('dragend', ()=>{
             alert('Elemnto inserido!')
         })
