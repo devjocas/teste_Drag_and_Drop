@@ -72,3 +72,102 @@
     </script>
 </body>
 </html>
+
+<!-- Exemplo-2 de arrastar imagem fantasma -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Custom Drag Image</title>
+  <style>
+    #dragMe {
+      width: 100px; height: 100px;
+      background: teal; color: white;
+      text-align: center; line-height: 100px;
+      cursor: grab;
+    }
+    #dropTarget {
+      margin-top: 20px;
+      width: 250px; height: 120px;
+      border: 2px dashed gray;
+      text-align: center; padding-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <h3>Custom ghost image while dragging</h3>
+  <div id="dragMe" draggable="true">Drag me</div>
+  <div id="dropTarget">Drop here</div>
+
+  <script>
+    const dragMe = document.getElementById("dragMe");
+    const dropTarget = document.getElementById("dropTarget");
+
+    dragMe.addEventListener("dragstart", (e) => {
+      const ghost = document.createElement("div");
+      ghost.style.width = "80px";
+      ghost.style.height = "80px";
+      ghost.style.background = "orange";
+      ghost.style.borderRadius = "50%";
+      document.body.appendChild(ghost);
+      e.dataTransfer.setDragImage(ghost, 40, 40);
+      setTimeout(() => ghost.remove(), 0);
+    });
+
+    dropTarget.addEventListener("dragover", (e) => e.preventDefault());
+    dropTarget.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropTarget.textContent = "Dropped with custom ghost!";
+    });
+  </script>
+</body>
+</html>
+
+<!-- Exemplo 3: Lista Ordenável (Reordenar Itens)  -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sortable List</title>
+  <style>
+    ul { list-style: none; padding: 0; }
+    li {
+      padding: 10px; margin: 5px;
+      background: lightblue;
+      cursor: move;
+    }
+  </style>
+</head>
+<body>
+  <h3>Reorder the items by dragging</h3>
+  <ul id="sortable">
+    <li draggable="true">Item 1</li>
+    <li draggable="true">Item 2</li>
+    <li draggable="true">Item 3</li>
+    <li draggable="true">Item 4</li>
+  </ul>
+
+  <script>
+    const sortable = document.getElementById("sortable");
+    let draggedItem = null;
+
+    sortable.addEventListener("dragstart", (e) => {
+      draggedItem = e.target;
+    });
+
+    sortable.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      const target = e.target;
+      if (target.tagName === "LI" && target !== draggedItem) {
+        const rect = target.getBoundingClientRect();
+        const next = (e.clientY - rect.top) / (rect.height) > 0.5;
+        sortable.insertBefore(draggedItem, next ? target.nextSibling : target);
+      }
+    });
+  </script>
+</body>
+</html>
+
+
